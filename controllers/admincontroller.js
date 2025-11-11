@@ -353,7 +353,7 @@ export const getTotalOrders = async (req, res) => {
 
 
 
-// backend/controllers/authController.js
+
 export const nextjsLoginRedirect = async (req, res) => {
   const { userId } = req.query;
 
@@ -373,6 +373,7 @@ export const nextjsLoginRedirect = async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
+    domain: "ecommerce-next-eosin-tau.vercel.app",
     maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
   });
 
