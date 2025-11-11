@@ -1,33 +1,25 @@
 import { db } from "../lib/db.js";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 dotenv.config();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 //generate otp
 function generateotp(length = 6) {
   return crypto.randomBytes(length).toString("hex").slice(0, length);
 }
 
-//transport agent
-export const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,      
-  port: process.env.SMTP_PORT,       
-  secure: false,  
-  auth: {
-    user: process.env.AUTH_EMAIL,
-    pass: process.env.AUTH_PASS,
-  },
-});
 
 //send email
 export const sendOtpEmail = async (email, otp) => {
-  return await transporter.sendMail({
-    from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
-    to: email,
+  return await resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL,   // verified sender
+    to: email,                              // recipient email
     subject: "Your OTP Code",
-    text: `Your OTP is: ${otp}`,
+    html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
   });
 };
 

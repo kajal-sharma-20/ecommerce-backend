@@ -1,26 +1,25 @@
 import { db } from "../lib/db.js";
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,      
-  port: process.env.SMTP_PORT,       
-  secure: false,
-  auth: {
-    user: process.env.AUTH_EMAIL,
-    pass: process.env.AUTH_PASS,
-  },
-});
+ 
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendCancelEmail = async (email, subject, message) => {
-  await transporter.sendMail({
-    from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
-    to: email,
-    subject,
-    text: message,
-  });
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL, // verified sender in Resend
+      to: email,                           // recipient email
+      subject: subject,
+      html: `<p>${message}</p>`,          // HTML version
+      // optional: you can add plain text fallback
+      text: message
+    });
+  } catch (err) {
+    console.error("Resend email error:", err);
+  }
 };
+
 
 //updatedeleivery status
 export const updateDeliveryStatus = async (req, res) => {

@@ -1,21 +1,27 @@
 import Stripe from "stripe";
 import { db } from "../lib/db.js";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 
 dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,      
-  port: process.env.SMTP_PORT,       
-  secure: false,
-  auth: {
-    user: process.env.AUTH_EMAIL,
-    pass: process.env.AUTH_PASS,
-  },
-});
+// Reusable Resend email function
+const sendEmail = async (to, subject, html, text = "") => {
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL, // must be a verified sender in Resend
+      to: to,
+      subject: subject,
+      html: html,
+      text: text || html,
+    });
+  } catch (err) {
+    console.error("Resend email error:", err);
+  }
+};
 
 export const stripeWebhook = async (req, res) => {
   const sig = req.headers["stripe-signature"];
@@ -71,13 +77,11 @@ export const stripeWebhook = async (req, res) => {
       const [users] = await db.execute("SELECT email, name FROM users WHERE id = ?", [userId]);
       if (users.length) {
         const user = users[0];
-        const mailOptions = {
-          from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
-          to: user.email,
-          subject: `Payment Successful - Order #${orderId}`,
-          html: `<h2>Hi ${user.name},</h2><p>Your payment for Order #${orderId} was successful!</p>`,
-        };
-        await transporter.sendMail(mailOptions);
+        await sendEmail(
+              user.email,
+              `Payment Successful - Order #${orderId}`,
+              `<h2>Hi ${user.name},</h2><p>Your payment for Order #${orderId} was successful!</p>`
+            );
       }
 
       console.log(`Payment success for order ${orderId}, discount: ${discount}, payable: ${payableAmount}`);
@@ -110,14 +114,12 @@ export const stripeWebhook = async (req, res) => {
             );
 
             // Send confirmation email
-            const mailOptions = {
-              from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
-              to: user.email,
-              subject: "Subscription Activated ",
-              html: `<h2>Hi ${user.name},</h2><p>Your subscription is now active!</p>`,
-            };
-            await transporter.sendMail(mailOptions);
-
+            await sendEmail(
+              user.email,
+              "Subscription Activated",
+              `<h2>Hi ${user.name},</h2><p>Your subscription is now active!</p>`
+            );
+            
             console.log(`Subscription ${subscriptionId} activated for user ${user.id}`);
           }
         } catch (err) {
@@ -164,14 +166,13 @@ export const stripeWebhook = async (req, res) => {
           [refund.id, refund.status, paymentIntentId]
         );
 
-        await transporter.sendMail({
-          from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
-          to: order.email,
-          subject: "Order Cancelled & Refunded",
-          html: `<h2>Hi ${order.name},</h2>
-                 <p>Your order #${order.id} has been cancelled successfully.</p>
-                 <p>The refund of ₹${order.payable_amount} has been processed to your original payment method.</p>`,
-        });
+        await sendEmail(
+          order.email,
+          "Order Cancelled & Refunded",
+          `<h2>Hi ${order.name},</h2>
+           <p>Your order #${order.id} has been cancelled successfully.</p>
+           <p>The refund of ₹${order.payable_amount} has been processed to your original payment method.</p>`
+        );
 
         console.log(`Refund processed successfully for order ${order.id}`);
       } catch (err) {
