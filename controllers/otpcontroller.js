@@ -92,6 +92,7 @@ export const verifyotp = async (req, res) => {
       secure: true, // only sent over HTTPS
       sameSite: "none", // allows frontend-backend on different domains
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2days
+      path: "/",
     });
 
     return res.status(200).json({
