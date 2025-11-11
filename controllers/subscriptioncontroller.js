@@ -22,8 +22,8 @@ export const createsubscription = async (req, res) => {
       mode: "subscription",
       customer: stripeCustomerId,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `http://localhost:3001/success/${userId}`,
-      cancel_url: `http://localhost:3001/plans/${userId}?status=cancel`,
+      success_url: `https://ecommerce-react-three-psi.vercel.app/success/${userId}`,
+      cancel_url: `https://ecommerce-react-three-psi.vercel.app/plans/${userId}?status=cancel`,
     });
 
      // Check if user already has this plan
