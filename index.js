@@ -9,19 +9,19 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app=express()
+app.use(cors({
+  origin: ["https://ecommerce-next-eosin-tau.vercel.app", "https://ecommerce-react-three-psi.vercel.app"],
+  credentials: true,
+}));
+ app.use(cookieParser());
 
 app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
   stripeWebhook
 );
- 
-app.use(cors({
-  origin: ["https://ecommerce-next-eosin-tau.vercel.app", "https://ecommerce-react-three-psi.vercel.app"],
-  credentials: true,
-}));
 
-app.use(cookieParser());
+
 app.use(express.json())
 app.get("/",(req,res)=>{
     res.send("sever starts")
