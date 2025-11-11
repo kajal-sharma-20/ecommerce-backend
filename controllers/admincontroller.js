@@ -350,3 +350,32 @@ export const getTotalOrders = async (req, res) => {
   }
 };
 
+
+
+// backend/controllers/authController.js
+export const nextjsLoginRedirect = async (req, res) => {
+  const { userId } = req.query;
+
+  const [rows] = await db.execute("SELECT * FROM users WHERE id = ?", [userId]);
+  if (!rows.length) return res.status(404).send("User not found");
+
+  const user = rows[0];
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "2d" }
+  );
+
+  // Set token cookie for Next.js domain
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+  });
+
+  // Redirect to Next.js admin page
+  res.redirect(`https://ecommerce-next-eosin-tau.vercel.app/admin/${userId}`);
+};
+

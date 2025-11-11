@@ -9,7 +9,7 @@ import { addToWishlist, getWishlistItems, removeFromWishlist } from "../controll
 import { createorder, getallorders, getOrderById, getordersummary, getuserorders, requestCancelOrder, updateOrderStatus } from "../controllers/ordercontroller.js";
 import { createplans, getplans } from "../controllers/plancontroller.js";
 import { cancelsubscription, createsubscription } from "../controllers/subscriptioncontroller.js";
-import { getPendingCancelRequests, getTotalCancelRequests, getTotalOrders, handleRequest, updateDeliveryStatus } from "../controllers/admincontroller.js";
+import { getPendingCancelRequests, getTotalCancelRequests, getTotalOrders, handleRequest, nextjsLoginRedirect, updateDeliveryStatus } from "../controllers/admincontroller.js";
 
 
 export const router = express.Router();
@@ -119,6 +119,8 @@ router.patch("/handlerequest/:orderId",handleRequest)
 router.get("/gettotalrequests", getTotalCancelRequests);
 
 router.get("/gettotalorders", getTotalOrders);
+
+router.get("/nextjs-login", nextjsLoginRedirect);
 
 
 
