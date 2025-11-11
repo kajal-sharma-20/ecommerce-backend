@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const sendCancelEmail = async (email, subject, message) => {
   await transporter.sendMail({
-    from: process.env.AUTH_EMAIL,
+    from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
     to: email,
     subject,
     text: message,

@@ -72,7 +72,7 @@ export const stripeWebhook = async (req, res) => {
       if (users.length) {
         const user = users[0];
         const mailOptions = {
-          from: process.env.AUTH_EMAIL,
+          from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
           to: user.email,
           subject: `Payment Successful - Order #${orderId}`,
           html: `<h2>Hi ${user.name},</h2><p>Your payment for Order #${orderId} was successful!</p>`,
@@ -111,7 +111,7 @@ export const stripeWebhook = async (req, res) => {
 
             // Send confirmation email
             const mailOptions = {
-              from: process.env.AUTH_EMAIL,
+              from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
               to: user.email,
               subject: "Subscription Activated ",
               html: `<h2>Hi ${user.name},</h2><p>Your subscription is now active!</p>`,
@@ -165,7 +165,7 @@ export const stripeWebhook = async (req, res) => {
         );
 
         await transporter.sendMail({
-          from: process.env.AUTH_EMAIL,
+          from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
           to: order.email,
           subject: "Order Cancelled & Refunded",
           html: `<h2>Hi ${order.name},</h2>

@@ -24,7 +24,7 @@ export const transporter = nodemailer.createTransport({
 //send email
 export const sendOtpEmail = async (email, otp) => {
   return await transporter.sendMail({
-    from: process.env.AUTH_EMAIL,
+    from: "Ecommerce website <cheshtaranisharma123@gmail.com>",
     to: email,
     subject: "Your OTP Code",
     text: `Your OTP is: ${otp}`,
