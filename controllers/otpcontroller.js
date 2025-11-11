@@ -1,6 +1,6 @@
 import { db } from "../lib/db.js";
 import crypto from "crypto";
-import { Resend } from 'resend';
+import { Resend } from "resend";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 dotenv.config();
@@ -12,12 +12,11 @@ function generateotp(length = 6) {
   return crypto.randomBytes(length).toString("hex").slice(0, length);
 }
 
-
 //send email
 export const sendOtpEmail = async (email, otp) => {
   return await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL,   // verified sender
-    to: email,                              // recipient email
+    from: process.env.RESEND_FROM_EMAIL, // verified sender
+    to: email, // recipient email
     subject: "Your OTP Code",
     html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
   });
@@ -29,7 +28,9 @@ export const sendotp = async (req, res) => {
     const { email } = req.body;
     const otp = generateotp();
 
-    const [rows] = await db.execute("SELECT * FROM users WHERE email = ?", [email]);
+    const [rows] = await db.execute("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
 
     if (rows.length === 0) {
       await db.execute(
@@ -53,7 +54,6 @@ export const sendotp = async (req, res) => {
     res.status(500).json({ message: "Error sending OTP" });
   }
 };
-
 
 //verify otp
 export const verifyotp = async (req, res) => {
@@ -88,10 +88,10 @@ export const verifyotp = async (req, res) => {
 
     // Set JWT as cookie
     res.cookie("token", token, {
-      httpOnly: true,     // cannot be accessed by JS
-      secure: true,       // only sent over HTTPS
-      sameSite: "none",   // allows frontend-backend on different domains
-      maxAge:  2*24*60*60 * 1000 // 2days
+      httpOnly: true, // cannot be accessed by JS
+      secure: true, // only sent over HTTPS
+      sameSite: "none", // allows frontend-backend on different domains
+      maxAge: 2 * 24 * 60 * 60 * 1000, // 2days
     });
 
     return res.status(200).json({
@@ -101,16 +101,17 @@ export const verifyotp = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ message: "Server error", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
-
 
 //resend otp
 export const resendotp = async (req, res) => {
   try {
     const { email } = req.body;
-    const otp = generateotp(); 
+    const otp = generateotp();
 
     // Update OTP in users table
     const [result] = await db.execute(
@@ -140,12 +141,15 @@ export const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/",
     });
 
     return res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Server error", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
   }
 };
 
@@ -155,14 +159,16 @@ export const checktoken = async (req, res) => {
     const token = req.cookies.token;
 
     if (!token) {
-      return res.status(401).json({ valid: false, message: "No token provided" });
+      return res
+        .status(401)
+        .json({ valid: false, message: "No token provided" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     return res.status(200).json({ valid: true, user: decoded });
   } catch (error) {
-    return res.status(401).json({ valid: false, message: "Invalid or expired token" });
+    return res
+      .status(401)
+      .json({ valid: false, message: "Invalid or expired token" });
   }
 };
-
-
