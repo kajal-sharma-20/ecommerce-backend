@@ -12,7 +12,9 @@ function generateotp(length = 6) {
 
 //transport agent
 export const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.SMTP_HOST,      
+  port: process.env.SMTP_PORT,       
+  secure: false,  
   auth: {
     user: process.env.AUTH_EMAIL,
     pass: process.env.AUTH_PASS,
