@@ -10,7 +10,7 @@ dotenv.config();
 
 const app=express()
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001"],
+  origin: ["https://ecommerce-next-eosin-tau.vercel.app", "https://ecommerce-react-three-psi.vercel.app/"],
   credentials: true,
 }));
  app.use(cookieParser());
