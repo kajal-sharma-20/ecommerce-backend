@@ -10,7 +10,7 @@ dotenv.config();
 
 const app=express()
 app.use(cors({
-  origin: ["https://ecommerce-next-eosin-tau.vercel.app", "https://ecommerce-react-three-psi.vercel.app/"],
+  origin: ["https://ecommerce-next-eosin-tau.vercel.app", "https://ecommerce-react-three-psi.vercel.app"],
   credentials: true,
 }));
  app.use(cookieParser());
