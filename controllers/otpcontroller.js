@@ -98,6 +98,7 @@ export const verifyotp = async (req, res) => {
       message: "OTP verified successfully!",
       userId: user.id,
       role: user.role,
+      token: token,
     });
   } catch (err) {
     console.log(err);
