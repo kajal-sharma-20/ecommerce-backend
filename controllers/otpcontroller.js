@@ -47,6 +47,7 @@ export const sendotp = async (req, res) => {
       );
     }
     await sendOtpEmail(email, otp);
+      console.log("otp",otp)
 
     res.status(200).json({ message: "OTP sent successfully!" });
   } catch (err) {
@@ -66,6 +67,8 @@ export const verifyotp = async (req, res) => {
        WHERE email = ? AND otp = ? AND otp_expires_at > NOW()`,
       [email, otp]
     );
+
+  
 
     if (rows.length === 0) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
