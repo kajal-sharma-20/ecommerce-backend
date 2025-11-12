@@ -41,9 +41,9 @@ export const createsubscription = async (req, res) => {
     } else {
       // Else, create new record
       await db.execute(
-        `INSERT INTO user_subscriptions (user_id, price_id, status)
-         VALUES (?, ?, ?)`,
-        [userId, priceId, "pending"]
+        `INSERT INTO user_subscriptions (user_id, price_id, status, stripe_subscription_id)
+         VALUES (?, ?, ?, ?)`,
+        [userId, priceId, "pending", "temp"]
       );
     }
 
