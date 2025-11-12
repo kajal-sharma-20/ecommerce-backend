@@ -158,9 +158,36 @@ export const logout = async (req, res) => {
 };
 
 //checktoken for frontend
+// export const checktoken = async (req, res) => {
+//   try {
+//     const token = req.cookies.token;
+
+//     if (!token) {
+//       return res
+//         .status(401)
+//         .json({ valid: false, message: "No token provided" });
+//     }
+
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     return res.status(200).json({ valid: true, user: decoded });
+//   } catch (error) {
+//     return res
+//       .status(401)
+//       .json({ valid: false, message: "Invalid or expired token" });
+//   }
+// };
+
+
+
+
 export const checktoken = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    let token = req.cookies.token; // cookie (works on desktop/Android)
+
+    // fallback: check Authorization header
+    if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
 
     if (!token) {
       return res
