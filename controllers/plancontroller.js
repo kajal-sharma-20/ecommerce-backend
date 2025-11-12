@@ -68,6 +68,11 @@ export const createplans = async (req, res) => {
 export const getplans = async (req, res) => {
   try {
     const { userId } = req.params; // <-- get userId from URL params
+    const planDescriptions = {
+  "Premium": "10 % discount",
+  "Pro": "10 % discount + Free Delivery"
+};
+
 
     if (!userId) {
       return res.status(400).json({ message: "userId is required" });
@@ -86,9 +91,10 @@ export const getplans = async (req, res) => {
 
     // Replace null status with 'inactive' for frontend ease
     const formattedPlans = plans.map(plan => ({
-      ...plan,
-      subscription_status: plan.subscription_status || "inactive"
-    }));
+  ...plan,
+  subscription_status: plan.subscription_status || "inactive",
+  description: planDescriptions[plan.plan_name] || ""
+}));
 
     res.status(200).json({ plans: formattedPlans });
   } catch (err) {
