@@ -49,7 +49,7 @@ export const sendotp = async (req, res) => {
     await sendOtpEmail(email, otp);
       console.log("otp",otp)
 
-    res.status(200).json({ message: "OTP sent successfully!" });
+    res.status(200).json({ message: "OTP sent successfully!", otp });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error sending OTP" });
@@ -131,7 +131,7 @@ export const resendotp = async (req, res) => {
 
     await sendOtpEmail(email, otp);
 
-    res.status(200).json({ message: "New OTP sent successfully!" });
+    res.status(200).json({ message: "New OTP sent successfully!", otp });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error resending OTP" });
