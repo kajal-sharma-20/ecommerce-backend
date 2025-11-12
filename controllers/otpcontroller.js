@@ -88,14 +88,12 @@ export const verifyotp = async (req, res) => {
 
     // Set JWT as cookie
     res.cookie("token", token, {
-      httpOnly: true, // cannot be accessed by JS
-      secure: true, // only sent over HTTPS
-      sameSite: "none", // allows frontend-backend on different domains
-      maxAge: 2 * 24 * 60 * 60 * 1000, // 2days
-      path: "/",
-      domain: ".vercel.app"
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // only true in prod
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/", // important
+      maxAge: 2 * 24 * 60 * 60 * 1000,
     });
-
     return res.status(200).json({
       message: "OTP verified successfully!",
       userId: user.id,
