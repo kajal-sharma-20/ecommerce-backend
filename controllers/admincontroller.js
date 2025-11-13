@@ -1,7 +1,6 @@
 import { db } from "../lib/db.js";
 import { Resend } from 'resend';
 import Stripe from "stripe";
-import jwt from "jsonwebtoken";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
  
 const resend = new Resend(process.env.RESEND_API_KEY);
