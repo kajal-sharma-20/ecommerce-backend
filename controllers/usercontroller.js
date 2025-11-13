@@ -19,7 +19,6 @@ export const adduser = async (req, res) => {
 
 //update user
 //hloooooooooooooooooooooo
-//nnnnnn
 
 export const updateuser = async (req, res) => {
   try {
