@@ -19,7 +19,7 @@ export const adduser = async (req, res) => {
 
 //update user
 
-// hlos
+// hlosssssss
 export const updateuser = async (req, res) => {
   try {
     const userId = req.params.id;
